@@ -7,17 +7,16 @@
                 <h1>Welcome to ChatMeter</h1>
 
                 @* Code challenge form *@
-                <p>
+
                     @helper.form(postUrl) {
                         @helper.CSRF.formField
-                        <form id="urlSubmissionForm">
-                            <div class="form-group">
-                                @helper.input(form("url")) { (id, name, value, args) =>
-                                    <input type="url" class="form-control" name="@name" id="@id" placeholder="https://www.google.com/" @toHtmlArgs(args)>
-                                }
-                            </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </form>
+
+                        <div class="form-group">
+                            @helper.input(form("url")) { (id, name, value, args) =>
+                                <input type="url" class="form-control" name="@name" id="@id" placeholder="https://www.google.com/" @toHtmlArgs(args)>
+                            }
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     }
 
                     @* Global errors are not tied to any particular form field *@
@@ -28,8 +27,6 @@
                             </div>
                         }
                     }
-
-                </p>
 
                 @if(url != null && !url.title.equals("")) {
                     <blockquote>
