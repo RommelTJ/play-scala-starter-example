@@ -28,4 +28,3 @@ class HomeController @Inject()(cc: ControllerComponents) (implicit assetsFinder:
 
 }
 
-case class URLData(url: String)
