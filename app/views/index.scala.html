@@ -8,13 +8,27 @@
 
                 @* Code challenge form *@
                 <p>
-                    <form id="urlSubmissionForm">
-                        <div class="form-group">
-                            <label for="exampleURL">URL</label>
-                            <input type="url" class="form-control" id="exampleURL" placeholder="https://www.google.com/">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
+                    @helper.form(postUrl) {
+                        @helper.CSRF.formField
+                        <form id="urlSubmissionForm">
+                            <div class="form-group">
+                                @helper.input(form("url")) { (id, name, value, args) =>
+                                    <input type="url" class="form-control" name="@name" id="@id" placeholder="https://www.google.com/" @toHtmlArgs(args)>
+                                }
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    }
+
+                    @* Global errors are not tied to any particular form field *@
+                    @if(form.hasGlobalErrors) {
+                        @form.globalErrors.map { error: FormError =>
+                            <div>
+                                @error.key: @error.message
+                            </div>
+                        }
+                    }
+
                 </p>
 
                 <blockquote>
@@ -27,34 +41,4 @@
             </article>
 
         </div>
-
-        <table>
-            <thead>
-                <tr><th>Name</th><th>Price</th>
-            </thead>
-            <tbody>
-            @for(w <- urls) {
-                <tr><td>@w.url</td><td>@w.title</td></tr>
-            }
-            </tbody>
-        </table>
-
-        <hr/>
-
-        @* Global errors are not tied to any particular form field *@
-        @if(form.hasGlobalErrors) {
-            @form.globalErrors.map { error: FormError =>
-                <div>
-                    @error.key: @error.message
-                </div>
-            }
-        }
-
-        @helper.form(postUrl) {
-            @helper.CSRF.formField
-
-            @helper.inputText(form("url"))
-
-            <button>Create URL</button>
-        }
     }

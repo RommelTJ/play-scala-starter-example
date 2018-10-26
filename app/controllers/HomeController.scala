@@ -11,7 +11,7 @@ class HomeController @Inject()(cc: MessagesControllerComponents) extends Message
   import URLForm._
 
   private val urls = scala.collection.mutable.ArrayBuffer(
-    URLModel("Widget 1", "123")
+    URLModel("Test", "Test")
   )
 
   // The URL to the widget.  You can call this directly from the template, but it
@@ -47,7 +47,7 @@ class HomeController @Inject()(cc: MessagesControllerComponents) extends Message
       // This is the good case, where the form was successfully parsed as a Data object.
       val myUrl = URLModel(url = data.url, title = "")
       urls.append(myUrl)
-      Redirect(routes.HomeController.index()).flashing("info" -> "URL added!")
+      Redirect(routes.HomeController.index()).flashing("info" -> myUrl.url)
     }
 
     val formValidationResult = form.bindFromRequest
