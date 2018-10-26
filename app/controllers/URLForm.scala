@@ -10,7 +10,7 @@ object URLForm {
     * Using a class specifically for form binding reduces the chances
     * of a parameter tampering attack and makes code clearer.
     */
-  case class URLData(name: String)
+  case class URLData(url: String)
 
   /**
     * The form definition for the "create a widget" form.
