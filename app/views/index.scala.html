@@ -1,20 +1,60 @@
-@*
- * This template takes a two arguments, a String containing a
- * message to display and an AssetsFinder to locate static assets.
- *@
-@(message: String)(implicit assetsFinder: AssetsFinder)
+@(urls: Seq[URLModel], form: Form[URLForm.URLData], postUrl: Call)(implicit request: MessagesRequestHeader)
 
-@*
- * Call the `main` template with two arguments. The first
- * argument is a `String` with the title of the page, the second
- * argument is an `Html` object containing the body of the page.
- *@
-@main("Welcome to ChatMeter", assetsFinder) {
+    @main("URLs") {
 
-    @*
-     * Get an `Html` object by calling the built-in Play welcome
-     * template and passing a `String` message.
-     *@
-    @chatmeter(message, style = "scala")
+        <div id="content" class="wrapper doc">
+            <article>
+                <h1>Welcome to ChatMeter</h1>
 
-}
+                @* Code challenge form *@
+                <p>
+                    <form id="urlSubmissionForm">
+                        <div class="form-group">
+                            <label for="exampleURL">URL</label>
+                            <input type="url" class="form-control" id="exampleURL" placeholder="https://www.google.com/">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </p>
+
+                <blockquote>
+                    @* Flash shows updates to a page *@
+                    @request.flash.data.map{ case (name, value) =>
+                    <div id="code-challenge-output">@name: @value</div>
+                    }
+                </blockquote>
+
+            </article>
+
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Name</th><th>Price</th>
+            </thead>
+            <tbody>
+            @for(w <- urls) {
+                <tr><td>@w.url</td><td>@w.title</td></tr>
+            }
+            </tbody>
+        </table>
+
+        <hr/>
+
+        @* Global errors are not tied to any particular form field *@
+        @if(form.hasGlobalErrors) {
+            @form.globalErrors.map { error: FormError =>
+                <div>
+                    @error.key: @error.message
+                </div>
+            }
+        }
+
+        @helper.form(postUrl) {
+            @helper.CSRF.formField
+
+            @helper.inputText(form("url"))
+
+            <button>Create URL</button>
+        }
+    }
