@@ -29,11 +29,6 @@ class HomeController @Inject()(cc: MessagesControllerComponents) extends Message
     Ok(views.html.index(urls, form, postUrl))
   }
 
-  //def listWidgets = Action { implicit request: MessagesRequest[AnyContent] =>
-  //    // Pass an unpopulated form to the template
-  //    Ok(views.html.listWidgets(widgets, form, postUrl))
-  //  }
-
   // This will be the action that handles our form post
   def createURL = Action { implicit request: MessagesRequest[AnyContent] =>
     val errorFunction = { formWithErrors: Form[URLData] =>
@@ -47,7 +42,7 @@ class HomeController @Inject()(cc: MessagesControllerComponents) extends Message
       // This is the good case, where the form was successfully parsed as a Data object.
       val myUrl = URLModel(url = data.url, title = "")
       urls.append(myUrl)
-      Redirect(routes.HomeController.index()).flashing("info" -> myUrl.url)
+      Redirect(routes.HomeController.index()).flashing("URL: " -> "".concat(myUrl.url))
     }
 
     val formValidationResult = form.bindFromRequest
