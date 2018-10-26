@@ -7,4 +7,4 @@ package models
   * which are used for reads, distinct from the form processing DTO,
   * which are used for writes.
   */
-case class URLModel(url: String, title: String)
+case class URLModel(url: String, var title: String)

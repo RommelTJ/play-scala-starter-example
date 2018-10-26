@@ -1,4 +1,4 @@
-@(urls: Seq[URLModel], form: Form[URLForm.URLData], postUrl: Call)(implicit request: MessagesRequestHeader)
+@(url: URLModel, form: Form[URLForm.URLData], postUrl: Call)(implicit request: MessagesRequestHeader)
 
     @main("URLs") {
 
@@ -31,12 +31,16 @@
 
                 </p>
 
-                <blockquote>
-                    @* Flash shows updates to a page *@
-                    @request.flash.data.map{ case (name, value) =>
-                    <div id="code-challenge-output">@name: @value</div>
-                    }
-                </blockquote>
+                @if(url != null && !url.title.equals("")) {
+                    <blockquote>
+                        <div id="code-challenge-output">@url.title</div>
+                    </blockquote>
+                }
+                @if(url != null && url.title.equals("")) {
+                    <blockquote>
+                        <div id="code-challenge-output">URL Not Found or Not Valid</div>
+                    </blockquote>
+                }
 
             </article>
 

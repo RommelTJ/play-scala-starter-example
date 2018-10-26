@@ -6,16 +6,13 @@ import java.util.Scanner
 import javax.inject.Inject
 import models.URLModel
 import play.api.data._
-import play.api.libs.ws._
 import play.api.mvc._
 
 
-class HomeController @Inject()(ws: WSClient, cc: MessagesControllerComponents) extends MessagesAbstractController(cc) {
+class HomeController @Inject()(cc: MessagesControllerComponents) extends MessagesAbstractController(cc) {
   import URLForm._
 
-  private val urls = scala.collection.mutable.ArrayBuffer(
-    URLModel("Test", "Test")
-  )
+  private var url: URLModel = _
 
   // The URL to the widget.  You can call this directly from the template, but it
   // can be more convenient to leave the template completely stateless i.e. all
@@ -29,7 +26,7 @@ class HomeController @Inject()(ws: WSClient, cc: MessagesControllerComponents) e
    * a path of `/`.
    */
   def index = Action { implicit request: MessagesRequest[AnyContent] =>
-    Ok(views.html.index(urls, form, postUrl))
+    Ok(views.html.index(url, form, postUrl))
   }
 
   // This will be the action that handles our form post
@@ -38,25 +35,25 @@ class HomeController @Inject()(ws: WSClient, cc: MessagesControllerComponents) e
       // This is the bad case, where the form had validation errors.
       // Let's show the user the form again, with the errors highlighted.
       // Note how we pass the form with errors to the template.
-      BadRequest(views.html.index(urls, formWithErrors, postUrl))
+      BadRequest(views.html.index(url, formWithErrors, postUrl))
     }
 
     val successFunction = { data: URLData =>
       // This is the good case, where the form was successfully parsed as a Data object.
       val myUrl = URLModel(url = data.url, title = "")
-      urls.append(myUrl)
 
-      var title = ""
       try {
         val inputStream = new URL(data.url).openStream()
         val scanner = new Scanner(inputStream)
         val responseBody = scanner.useDelimiter("\\A").next()
-        title = responseBody.substring(responseBody.indexOf("<title>") + 7, responseBody.indexOf("</title>"))
+        myUrl.title = responseBody.substring(responseBody.indexOf("<title>") + 7, responseBody.indexOf("</title>"))
       } catch {
         case nse: NoSuchElementException => nse.printStackTrace()
       }
 
-      Redirect(routes.HomeController.index()).flashing("Title " -> title)
+      url = myUrl
+
+      Ok(views.html.index(url, form, postUrl))
     }
 
     val formValidationResult = form.bindFromRequest
