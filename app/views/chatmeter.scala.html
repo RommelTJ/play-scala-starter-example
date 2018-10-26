@@ -1,0 +1,55 @@
+@(message: String, style: String = "scala")
+
+@defining(play.core.PlayVersion.current) { version =>
+
+    <section id="top">
+        <div class="wrapper">
+            <h1><a href="https://playframework.com/documentation/@version/Home">@message</a></h1>
+        </div>
+    </section>
+
+    <div id="content" class="wrapper doc">
+        <article>
+
+            <h1>Welcome to ChatMeter</h1>
+
+            @* Code challenge form *@
+            <p>
+                <form id="urlSubmissionForm">
+                    <div class="form-group">
+                        <label for="exampleURL">URL</label>
+                        <input type="url" class="form-control" id="exampleURL" placeholder="https://www.google.com/">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </p>
+
+            <blockquote>
+                <p id="code-challenge-output"></p>
+            </blockquote>
+
+        </article>
+
+        <aside>
+            <h3>Browse</h3>
+            <ul>
+                <li><a href="https://playframework.com/documentation/@version">Documentation</a></li>
+                <li><a href="https://playframework.com/documentation/@version/api/@style/index.html">Browse the @{style.capitalize} API</a></li>
+            </ul>
+            <h3>Start here</h3>
+            <ul>
+                <li><a href="https://playframework.com/documentation/@version/PlayConsole">Using the Play console</a></li>
+                <li><a href="https://playframework.com/documentation/@version/IDE">Setting up your preferred IDE</a></li>
+                <li><a href="https://playframework.com/download#examples">Example Projects</a>
+            </ul>
+            <h3>Help here</h3>
+            <ul>
+                <li><a href="https://stackoverflow.com/questions/tagged/playframework">Stack Overflow</a></li>
+                <li><a href="https://discuss.playframework.com">Discuss Play Forum</a> </li>
+                <li><a href="https://gitter.im/playframework/playframework">Gitter Channel</a></li>
+            </ul>
+
+        </aside>
+
+    </div>
+}
