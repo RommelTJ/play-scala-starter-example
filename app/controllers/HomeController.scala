@@ -8,7 +8,6 @@ import models.URLModel
 import play.api.data._
 import play.api.mvc._
 
-
 class HomeController @Inject()(cc: MessagesControllerComponents) extends MessagesAbstractController(cc) {
   import URLForm._
 
