@@ -1,13 +1,16 @@
 package controllers
 
-import javax.inject._
-import models.URLModel
-import play.api.mvc._
-import play.api.data._
-import play.api.data.Forms._
-import play.api.data.validation.Constraints._
+import java.net.URL
+import java.util.Scanner
 
-class HomeController @Inject()(cc: MessagesControllerComponents) extends MessagesAbstractController(cc) {
+import javax.inject.Inject
+import models.URLModel
+import play.api.data._
+import play.api.libs.ws._
+import play.api.mvc._
+
+
+class HomeController @Inject()(ws: WSClient, cc: MessagesControllerComponents) extends MessagesAbstractController(cc) {
   import URLForm._
 
   private val urls = scala.collection.mutable.ArrayBuffer(
@@ -42,7 +45,18 @@ class HomeController @Inject()(cc: MessagesControllerComponents) extends Message
       // This is the good case, where the form was successfully parsed as a Data object.
       val myUrl = URLModel(url = data.url, title = "")
       urls.append(myUrl)
-      Redirect(routes.HomeController.index()).flashing("URL: " -> "".concat(myUrl.url))
+
+      var title = ""
+      try {
+        val inputStream = new URL(data.url).openStream()
+        val scanner = new Scanner(inputStream)
+        val responseBody = scanner.useDelimiter("\\A").next()
+        title = responseBody.substring(responseBody.indexOf("<title>") + 7, responseBody.indexOf("</title>"))
+      } catch {
+        case nse: NoSuchElementException => nse.printStackTrace()
+      }
+
+      Redirect(routes.HomeController.index()).flashing("Title " -> title)
     }
 
     val formValidationResult = form.bindFromRequest
